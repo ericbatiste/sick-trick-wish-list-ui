@@ -7,6 +7,19 @@ function Form({addTrick}) {
   const [obstacle, setObstacle] = useState('');
   const [tutorial, setTutorail] = useState('');
 
+
+  // fetch('http://localhost:3001/api/v1/tricks', {
+  //   method: 'POST',
+  //   body: JSON.stringify(data),
+  //   headers: {
+  //     'Content-Type': 'application/json'
+  //   }
+  //   .then(res => res.json())
+  //   .then(data => console.log(data))
+  //   .catch(err => console.error(err))
+  // })
+
+
   const submitTrick = e => {
     e.preventDefault();
     const newTrick = {

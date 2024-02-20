@@ -16,6 +16,7 @@ function App() {
     fetch('http://localhost:3001/api/v1/tricks')
     .then(res => res.json())
     .then(data => setTricks(data))
+    .catch(err => console.error(err))
   }, [])
 
   return (
