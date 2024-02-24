@@ -1,6 +1,6 @@
 .tricks-container {
-  display: grid;
-  grid-template-columns: repeat(3, auto);
-  grid-template-rows: auto;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   gap: 2rem;
 }

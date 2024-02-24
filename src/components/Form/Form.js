@@ -2,52 +2,50 @@ import './Form.css';
 import { useState } from 'react';
 
 function Form({addTrick}) {
-  const [stance, setStance] = useState('');
-  const [name, setName] = useState('');
-  const [obstacle, setObstacle] = useState('');
-  const [tutorial, setTutorail] = useState('');
+  const [alert, setAlert] = useState('')
+  const [formData, setFormData] = useState({
+    stance: '',
+    name: '',
+    obstacle: '',
+    tutorial: '',
+    id: Date.now()
+  })
 
-
-  // fetch('http://localhost:3001/api/v1/tricks', {
-  //   method: 'POST',
-  //   body: JSON.stringify(data),
-  //   headers: {
-  //     'Content-Type': 'application/json'
-  //   }
-  //   .then(res => res.json())
-  //   .then(data => console.log(data))
-  //   .catch(err => console.error(err))
-  // })
-
+  const setFormValue = (e) => {
+    setAlert('');
+    setFormData({...formData, [e.target.name]: e.target.value});
+  }
+  
+  const isFormComplete = () => {
+    return !Object.values(formData).some(inputData => inputData === "");
+  }
 
   const submitTrick = e => {
     e.preventDefault();
-    const newTrick = {
-      stance,
-      name,
-      obstacle,
-      tutorial,
-      id: Date.now(),
-    }
-    addTrick(newTrick);
-    clearInputs()
-  }
-
-  const clearInputs = () => {
-    setStance('');
-    setName('');
-    setObstacle('');
-    setTutorail('');
+    !isFormComplete() ? 
+    setAlert('Fill out all required fields.') :
+    fetch('http://localhost:3001/api/v1/tricks', {
+      method: 'POST',
+      body: JSON.stringify(formData),
+      headers: { 'Content-Type': 'application/json' }
+    })
+    .then(res => res.json())
+    .then(postResult => {
+        addTrick(postResult)
+        setFormData({stance: '', name: '', obstacle: '', tutorial: ''})
+      })
+      .catch(err => console.error(err))
   }
 
   return (
+    <>
     <form>
       <select 
         name="stance" 
         id="stance-select"
-        value={stance}
-        onChange={e => setStance(e.target.value)}
-      >
+        value={formData.stance}
+        onChange={setFormValue}
+        >
         <option value="">Choose your stance</option>
         <option value="regular">regular</option>
         <option value="goofy">goofy</option>
@@ -57,16 +55,16 @@ function Form({addTrick}) {
         type="text"
         placeholder='Name of trick'
         name='name'
-        value={name}
-        onChange={e => setName(e.target.value)}
-      />
+        value={formData.name}
+        onChange={setFormValue}
+        />
       
       <select 
         name="obstacle" 
         id="obstacle-select"
-        value={obstacle} 
-        onChange={e => setObstacle(e.target.value)}
-      >
+        value={formData.obstacle} 
+        onChange={setFormValue}
+        >
         <option value="">Choose your obstacle</option>
         <option value="flatground">flatground</option>
         <option value="ledge">ledge</option>
@@ -78,13 +76,15 @@ function Form({addTrick}) {
       <input 
         type="text"
         placeholder='Link to tutorial'
-        name='tutorialLink'
-        value={tutorial}
-        onChange={e => setTutorail(e.target.value)}
-      />
+        name='tutorial'
+        value={formData.tutorial}
+        onChange={setFormValue}
+        />
       
       <button onClick={e => submitTrick(e)}>SeNd iT!</button>
     </form>
+    <p className='alert'>{alert}</p>
+    </>
   )
 }
 

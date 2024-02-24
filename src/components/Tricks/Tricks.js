@@ -10,7 +10,7 @@ function Tricks({ tricks }) {
         obstacle={trick.obstacle}
         tutorial={trick.tutorial}
         id={trick.id}
-        key={trick.key}
+        key={trick.id}
       />
     )
   }) 
